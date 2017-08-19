@@ -1,0 +1,27 @@
+# -*- coding: utf-8 -*-
+
+import json
+
+from constant import params_path
+
+
+class Config(object):
+    def __init__(self, param_path=params_path):
+        f = open(param_path, 'r',encoding='utf-8')
+        self.param_cfg = json.load(f)
+        f.close()
+
+    def get_param_dict(self, api_name):
+        for p in self.param_cfg:
+            if p['apiName'] == api_name:
+                return p
+        return None
+
+    def param_config_list(self):
+        return self.param_cfg
+
+    def find_api(self, api_name):
+        for p in self.param_config_list():
+            if p['apiName'] == api_name:
+                return p
+        return None

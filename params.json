@@ -1,0 +1,122 @@
+[
+  {
+    "method": "post",
+    "path": "am",
+    "apiName": "addAdminInfo.do",
+    "params": {
+      "userId": 1,
+      "schoolId": 1,
+      "loginId": "@getNewAccount.do -p {'type':2} -j data/loginId",
+      "userName": "周卫贤自动%d",
+      "phoneNum": "201706001122",
+      "roleId": 1
+    }
+  },
+  {
+    "method": "get",
+    "apiName": "getNewAccount.do",
+    "params": {
+      "userId": 1,
+      "type": "3",
+      "schoolId": 1,
+      "classId": null
+    }
+  },
+  {
+    "method": "post",
+    "apiName": "addSchoolInfo.do",
+    "path": "sm",
+    "dependency": "getNewAccount.do",
+    "params": {
+      "userId": 1,
+      "schoolName": "北京四中网校%d",
+      "relatePersonName": "周老师自动创建",
+      "phoneNum": "18310511300",
+      "schoolPhoneNum": "01011112222",
+      "schoolCode": "bjsz",
+      "address": "北京西城",
+      "schoolType": "{1,2}",
+      "provinceId": "229692568",
+      "cityId": "335",
+      "adminLoginId": "m1@bjsz",
+      "isCheck": "0"
+    }
+  },
+  {
+    "method": "get",
+    "apiName": "getProvinceCityList.do",
+    "params": {
+      "userId": 1
+    }
+  },
+  {
+    "method": "post",
+    "path": "em",
+    "apiName": "addEnrollInfo.do",
+    "params": {
+      "userId": 1,
+      "studentLoginId": "@if $type==1: @getNewAccount.do -p {'type':3,'classId':859} -j data/loginId else: null",
+      "studentId": -1,
+      "studentName": "周卫贤%d",
+      "studentBirth": "2010-06-%d",
+      "studentSex": "{1,2}",
+      "curSchoolName": "北京四中%d",
+      "gradeId": "{1,2,3,4,5,6}",
+      "parentName": "他爸%d",
+      "phoneNum": "13322229999",
+      "payAmount": "56",
+      "prepay": "666",
+      "schoolId": "@getSchoolAndSubList.do -p {'type':0} -j data[]/schoolId",
+      "classIds": "1:2",
+      "ignorePhoneNum": 1,
+      "isTest": "{0,1}",
+      "testScore": 90,
+      "testDesc": "",
+      "audition": "{0,1}",
+      "auditionDesc": "",
+      "timeId": "1,2,3",
+      "communication": "",
+      "type": "{0,1}"
+    }
+  },
+  {
+    "method": "get",
+    "path": "sm",
+    "apiName": "getSchoolAndSubList.do",
+    "params": {
+      "userId": 1,
+      "type": "{0,1}"
+    }
+  },
+  {
+    "method": "get",
+    "apiName": "getClassCourselistList.do",
+    "path": "em",
+    "params": {
+      "userId": 1,
+      "schoolId": "1"
+    }
+  },
+  {
+    "method": "get",
+    "path": "stum",
+    "apiName": "getInformalStudentList.do",
+    "params": {
+      "userId": 1,
+      "name": null,
+      "phone": null,
+      "schoolName": null,
+      "schoolId": null,
+      "subSchoolId": null,
+      "gradeId": null,
+      "periodType": null,
+      "test": null,
+      "audition": null,
+      "enrollTime": null,
+      "pageNum": 1,
+      "pageSize": 20
+    }
+  }
+]
+
+
