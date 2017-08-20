@@ -6,8 +6,12 @@ from constant import params_path
 
 
 class Config(object):
+    '''
+    加载接口参数配置文件类
+    '''
+
     def __init__(self, param_path=params_path):
-        f = open(param_path, 'r',encoding='utf-8')
+        f = open(param_path, 'r', encoding='utf-8')
         self.param_cfg = json.load(f)
         f.close()
 

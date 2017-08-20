@@ -1,26 +1,32 @@
 # -*- coding: utf-8 -*-
 import sys
 
+from argv import Argv
 from config import Config
 from constant import params_path
 from params import Param
 
+
+
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print('---> please input api name and repeate num <---')
+    man = '''
+    a tools auto test http api
+    
+    usage:
+        auto-data.py <api_name> [-r repeat]
+    
+    example:
+        python auto-data.py getXXX.do -r 5
+        
+    '''
+    argv = Argv.parse_argv(sys.argv[1:])
+    name = argv['name']
+    cfg = Config(params_path)
+    api = cfg.find_api(name)
+    if api is None:
+        print(man)
     else:
-        api_name = sys.argv[1]
-        num=1
-        if len(sys.argv) == 3:
-            num=int(sys.argv[2])
-        cfg=Config(params_path)
-        api = cfg.find_api(api_name)
-        if api is None:
-            print('---> api not exists <---')
-        else:
-            p=Param(api)
-            for i in range(0,num):
-                resp = p.request()
-                print(resp.text)
-
-
+        p = Param(api)
+        for i in range(0, int(argv['-r']) if '-r' in argv else 0):
+            resp = p.request()
+            print(resp.text)
