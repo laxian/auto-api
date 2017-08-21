@@ -26,4 +26,7 @@ if __name__ == '__main__':
     if api is None:
         print(man)
     else:
-        print(Param.request_argv(argv))
+        r = int(argv['-r']) if '-r' in argv else 1
+        for i in range(0,r):
+            print('\n-------->\n')
+            print(Param.request_argv(argv))

@@ -119,7 +119,7 @@
       "payAmount": "56",
       "prepay": "666",
       "schoolId": "@getSchoolAndSubList.do -p {'type':0} -j data#/schoolId",
-      "classIds": "2:@<<getStudentInfo.do -p {'studentId':$params/studentId} -j data/studentNo>>",
+      "classIds": "356:@<<getStudentInfo.do -p {'studentId':$params/studentId} -j data/studentNo>>",
       "ignorePhoneNum": 1,
       "isTest": "{0,1}",
       "testScore": 90,
@@ -128,7 +128,7 @@
       "auditionDesc": "",
       "timeId": "1,2,3",
       "communication": "",
-      "type": "0",
+      "type": "1",
       "time": "!{{int(time.time()*1000)}}",
       "sign": "!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
     }

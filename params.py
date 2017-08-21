@@ -157,11 +157,15 @@ class Param:
             while i < len(paths):
                 p = paths[i]
                 if p.endswith('#'):
-                    lst = curr[p.replace('#', '')]
+                    lst = curr[p[:-1]]
                     random_index = random.randint(0, len(lst) - 1)
                     curr = lst[random_index]
                 else:
-                    curr = curr[p]
+                    try:
+                        curr = curr[p]
+                    except:
+                        print('%r not in %r'%(p, curr))
+                        return ''
                 i += 1
             return curr
         return jsn
