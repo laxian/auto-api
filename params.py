@@ -54,7 +54,7 @@ class Param:
                         rand = utils.random_select(utils.find_by_path(self.param, va[1:]))
                         if va[1:] in ps.keys():
                             ps[va[1:]] = rand
-                        v = v.replace(va, rand)
+                        v = v.replace(va, str(rand))
 
             # 1. 可执行代码块
             if re.findall('!\{\{.+?\}\}', v):

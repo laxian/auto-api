@@ -21,7 +21,7 @@
       "userId": 1,
       "type": "3",
       "schoolId": 1,
-      "classId": "@if $params/type==3: @getClassCourselistList.do -j data/subjectList[]/subSchoolList[]/classList[]/classId else: null",
+      "classId": "@if $params/type==3: @getClassCourselistList.do -j data/subjectList[]/subSchoolList[]/classList[]/classId else:",
       "time":"!{{int(time.time()*1000)}}",
       "sign":"!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
     }
