@@ -13,7 +13,7 @@ if __name__ == '__main__':
     a tools auto test http api
     
     usage:
-        auto-data.py <api_name> [-r repeat]
+        auto-data.py <api_name> [-r repeat] [-j json path] [-p params]
     
     example:
         python auto-data.py getXXX.do -r 5
@@ -26,12 +26,4 @@ if __name__ == '__main__':
     if api is None:
         print(man)
     else:
-        if '-p' in argv:
-            cmd_param=eval(argv['-p'])
-            api['params'].update(cmd_param)
-        p = Param(api)
-        for i in range(0, int(argv['-r']) if '-r' in argv else 0):
-            if '-j' in argv:
-                print(p.pick(argv['-j']))
-            else:
-                print(p.request().text)
+        print(Param.request_argv(argv))

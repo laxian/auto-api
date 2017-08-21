@@ -82,19 +82,7 @@ class Param:
                         else:
                             v = else_sentence
                     else:
-                        param = Argv.parse(cmd)
-                        param_dic = {}
-                        if '-p' in param.keys():
-                            if re.match('\{[:\'",\w]+\}', param['-p']):
-                                param_dic = eval(param['-p'])
-
-                        # ready to request
-                        cfg = Config()
-                        api_param = cfg.find_api(param['name'])
-                        api_param_param = dict(api_param['params'], **param_dic)
-                        api_param['params'] = api_param_param
-                        newp = Param(api_param)
-                        v = newp.pick(param['-j'] if '-j' in param.keys() else None)
+                        v = self.request_cmd(cmd)
 
             if v is not None:
                 ps[k]=v
@@ -103,6 +91,24 @@ class Param:
 
 
         return ps
+
+    def request_cmd(self, cmd):
+        param = Argv.parse(cmd)
+        return self.request_argv(param)
+
+    @staticmethod
+    def request_argv(param):
+        param_dic = {}
+        if '-p' in param.keys():
+            if re.match('\{[:\'",\w]+\}', param['-p']):
+                param_dic = eval(param['-p'])
+
+        # ready to request
+        cfg = Config()
+        api_param = cfg.find_api(param['name'])
+        api_param['params'].update(param_dic)
+        newp = Param(api_param)
+        return newp.pick(param['-j'] if '-j' in param.keys() else None)
 
     def append_params(self):
         dic = self.params_conv()
@@ -139,8 +145,7 @@ class Param:
         '''
         dic = self.params()
         dic2 = {}
-        for k in dic:
-            v = dic[k]
+        for k,v in dic.items():
             if v is None:
                 continue
             dic2[k] = v
@@ -182,6 +187,7 @@ class Param:
                     random_index = random.randint(0, len(lst) - 1)
                     curr = lst[random_index]
                 else:
+                    print('--->%r'%curr)
                     curr = curr[p]
                 i += 1
             return curr
