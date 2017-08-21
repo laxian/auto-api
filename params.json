@@ -44,7 +44,8 @@
       "cityId": "335",
       "adminLoginId": "m1@bjsz",
       "isCheck": "0",
-      "time":"!{{int(time.time()*1000)}}"
+      "time":"!{{int(time.time()*1000)}}",
+      "sign":"!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
     }
   },
   {
@@ -52,7 +53,8 @@
     "apiName": "getProvinceCityList.do",
     "params": {
       "userId": 1,
-      "time":"!{{int(time.time()*1000)}}"
+      "time":"!{{int(time.time()*1000)}}",
+      "sign":"!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
     }
   },
   {
@@ -94,7 +96,8 @@
     "params": {
       "userId": 1,
       "type": "{0,1}",
-      "time":"!{{int(time.time()*1000)}}"
+      "time":"!{{int(time.time()*1000)}}",
+      "sign":"!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
     }
   },
   {

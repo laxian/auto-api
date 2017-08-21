@@ -54,7 +54,8 @@ class Argv(object):
                     i+=2
             else:
                 if man is None:
-                    print('format error')
+                    print('Illegal Argv: "%s"'%kw[i])
+                    i+=1
                 else:
                     print(man)
         return dic

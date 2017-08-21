@@ -83,12 +83,9 @@ class Param:
                     else:
                         v = self.request_cmd(cmd)
 
-            if v is not None:
-                ps[k] = v
-            else:
-                del ps[k]
+            ps[k] = v
 
-        return ps
+        return {k: v for k, v in ps.items() if v is not None}
 
     def request_cmd(self, cmd):
         param = Argv.parse(cmd)
@@ -104,10 +101,7 @@ class Param:
         # ready to request
         cfg = Config()
         api_param = cfg.find_api(param['name'])
-        print('____> %r'%api_param)
-        print('____> %r'%param_dic)
         api_param['params'].update(param_dic)
-        print('+++++ %r'%api_param)
         newp = Param(api_param)
         return newp.pick(param['-j'] if '-j' in param.keys() else None)
 
@@ -162,7 +156,6 @@ class Param:
                     random_index = random.randint(0, len(lst) - 1)
                     curr = lst[random_index]
                 else:
-                    print('--->%r' % curr)
                     curr = curr[p]
                 i += 1
             return curr
