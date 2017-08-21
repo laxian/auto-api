@@ -83,6 +83,11 @@ class Param:
                     else:
                         v = self.request_cmd(cmd)
 
+            if isinstance(v,str) and '@' in v:
+                at_list=re.findall(r'@<<.+?>>',v)
+                for al in at_list:
+                    v=v.replace(al, self.request_cmd(al[3:-2]))
+
             ps[k] = v
 
         return {k: v for k, v in ps.items() if v is not None}
