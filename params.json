@@ -61,7 +61,7 @@
     "apiName": "addEnrollInfo.do",
     "params": {
       "userId": 1,
-      "studentLoginId": "@if $params/type==1: @getNewAccount.do -p {'type':3,'classId':859} -j data/loginId else: null",
+      "studentLoginId": "@if $params/type==1: @getNewAccount.do -p {'type':3,'classId':859} -j data/loginId else: ",
       "studentId": -1,
       "studentName": "周卫贤%d",
       "studentBirth": "2010-06-%d",
@@ -83,7 +83,8 @@
       "timeId": "1,2,3",
       "communication": "",
       "type": "0",
-      "time":"!{{int(time.time()*1000)}}"
+      "time":"!{{int(time.time()*1000)}}",
+      "sign":"!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
     }
   },
   {

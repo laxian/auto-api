@@ -28,11 +28,9 @@ if __name__ == '__main__':
     else:
         if '-p' in argv:
             cmd_param=eval(argv['-p'])
-            api['params']=dict(api['params'], **cmd_param)
+            api['params'].update(cmd_param)
         p = Param(api)
         for i in range(0, int(argv['-r']) if '-r' in argv else 0):
-            # resp = p.request()
-            # print(resp.text)
             if '-j' in argv:
                 print(p.pick(argv['-j']))
             else:

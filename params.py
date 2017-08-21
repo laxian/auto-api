@@ -48,6 +48,7 @@ class Param:
 
                     if va == '$*':
                         del ps[k]
+                        print(ps)
                         v = v.replace(va, json.dumps({k:v for k,v in ps.items() if v is not None}))
                         ps[k]=v
                     else:
