@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import json
-from collections import OrderedDict
 import os
 import random
 import re
+from collections import OrderedDict
 
 import requests
 
@@ -12,7 +12,6 @@ import utils
 from argv import Argv
 from config import Config
 from constant import base_url
-from sign import get_sign
 
 
 class Param:
@@ -49,8 +48,8 @@ class Param:
                     if va == '$*':
                         del ps[k]
                         print(ps)
-                        v = v.replace(va, json.dumps({k:v for k,v in ps.items() if v is not None}))
-                        ps[k]=v
+                        v = v.replace(va, json.dumps({k: v for k, v in ps.items() if v is not None}))
+                        ps[k] = v
                     else:
                         rand = utils.random_select(utils.find_by_path(self.param, va[1:]))
                         if va[1:] in ps.keys():
@@ -65,8 +64,8 @@ class Param:
             # @后面的代码
             if v.startswith('@'):
 
-                while isinstance(v,str) and v.startswith('@'):
-                    cmd=v[1:]
+                while isinstance(v, str) and v.startswith('@'):
+                    cmd = v[1:]
                     if cmd.startswith('if '):
                         if_start = cmd.find(':', cmd.index('if')) + 1
                         if_end = len(cmd)
@@ -85,10 +84,9 @@ class Param:
                         v = self.request_cmd(cmd)
 
             if v is not None:
-                ps[k]=v
+                ps[k] = v
             else:
                 del ps[k]
-
 
         return ps
 
@@ -111,7 +109,7 @@ class Param:
         return newp.pick(param['-j'] if '-j' in param.keys() else None)
 
     def append_params(self):
-        dic = self.params_conv()
+        dic = self.params()
         ret = '?'
         for k in dic.keys():
             ret += k
@@ -132,32 +130,6 @@ class Param:
     def path(self):
         return '' if 'path' not in self.param else self.param['path'] + os.sep
 
-    def params_conv(self):
-        '''
-            "params": {
-              "userId": 1,
-              "type": "{1,2,3}",
-              "schoolId": 1,
-              "classId": null,
-              "time": "@now",
-            }
-        :return:
-        '''
-        dic = self.params()
-        dic2 = {}
-        for k,v in dic.items():
-            if v is None:
-                continue
-            dic2[k] = v
-
-        # dic2['time'] = int(time.time() * 1000)
-        # dic2['method'] = self.api()
-        # dic2['sign'] = get_sign(dic2)
-        # del dic2['method']
-
-        self.counter += 1
-        return dic2
-
     def post_url(self, url=base_url):
         return url + self.path() + self.param['apiName']
 
@@ -168,13 +140,13 @@ class Param:
 
     def request(self):
         if self.method() == 'post':
-            return requests.post(self.post_url(), data=self.params_conv())
+            return requests.post(self.post_url(), data=self.params())
         elif self.method() == 'get':
             return requests.get(self.get_url())
 
     def pick(self, jpath):
         resp = self.request()
-        jsn=resp.text
+        jsn = resp.text
         if jpath is not None:
             jdic = json.loads(jsn)
             paths = jpath.split('/')
@@ -187,37 +159,8 @@ class Param:
                     random_index = random.randint(0, len(lst) - 1)
                     curr = lst[random_index]
                 else:
-                    print('--->%r'%curr)
+                    print('--->%r' % curr)
                     curr = curr[p]
                 i += 1
             return curr
         return jsn
-
-# if __name__ == '__main__':
-#
-#     ps = '''
-#       {
-#     "method": "get",
-#     "apiName": "getNewAccount.do",
-#     "params": {
-#       "userId": 1,
-#       "type": "{1,2,3}",
-#       "schoolId": 1,
-#       "classId": null
-#     }
-#   }
-#   '''
-#
-#     p = Param(ps)
-#     for i in range(0, 10):
-#         pdic = p.params_conv(i)
-#         res = requests.get(p.get_url())
-#         print(res.text)
-
-#
-# if 1==1:
-#      print("@getNewAccount.do {'type':3,'classId':$classId}")
-#  else:
-#      print(None)
-#
-# '''if 1==1: \n\t"ret=@getNewAccount.do {'type':3,'classId':$classId}" \nelse: \n\tret=None'''
