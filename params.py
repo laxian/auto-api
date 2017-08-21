@@ -98,13 +98,16 @@ class Param:
     def request_argv(param):
         param_dic = {}
         if '-p' in param.keys():
-            if re.match('\{[:\'",\w]+\}', param['-p']):
+            if re.match("\{('\w+':\s*'?\w+'?)(?:\s*,\s*'\w+':\s*'?\w+'?)*}", param['-p']):
                 param_dic = eval(param['-p'])
 
         # ready to request
         cfg = Config()
         api_param = cfg.find_api(param['name'])
+        print('____> %r'%api_param)
+        print('____> %r'%param_dic)
         api_param['params'].update(param_dic)
+        print('+++++ %r'%api_param)
         newp = Param(api_param)
         return newp.pick(param['-j'] if '-j' in param.keys() else None)
 
@@ -154,8 +157,8 @@ class Param:
             curr = jdic
             while i < len(paths):
                 p = paths[i]
-                if p.endswith('[]'):
-                    lst = curr[p.replace('[]', '')]
+                if p.endswith('#'):
+                    lst = curr[p.replace('#', '')]
                     random_index = random.randint(0, len(lst) - 1)
                     curr = lst[random_index]
                 else:

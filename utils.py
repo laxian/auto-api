@@ -28,8 +28,8 @@ def find_by_path(jdic, jpath):
         curr = jdic
         while i < len(paths):
             p = paths[i]
-            if p.endswith('[]'):
-                lst = curr[p.replace('[]', '')]
+            if p.endswith('#'):
+                lst = curr[p.replace('#', '')]
                 random_index = random.randint(0, len(lst) - 1)
                 curr = lst[random_index]
             else:

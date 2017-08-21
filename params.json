@@ -21,7 +21,7 @@
       "userId": 1,
       "type": "3",
       "schoolId": 1,
-      "classId": "@if $params/type==3: @getClassCourselistList.do -j data/subjectList[]/subSchoolList[]/classList[]/classId else:",
+      "classId": "@if $params/type==3: @getClassCourselistList.do -j data/subjectList#/subSchoolList#/classList#/classId else:",
       "time":"!{{int(time.time()*1000)}}",
       "sign":"!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
     }
@@ -72,7 +72,7 @@
       "phoneNum": "13322229999",
       "payAmount": "56",
       "prepay": "666",
-      "schoolId": "@getSchoolAndSubList.do -p {'type':0} -j data[]/schoolId",
+      "schoolId": "@getSchoolAndSubList.do -p {'type':0} -j data#/schoolId",
       "classIds": "1:2",
       "ignorePhoneNum": 1,
       "isTest": "{0,1}",

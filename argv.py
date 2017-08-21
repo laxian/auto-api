@@ -30,13 +30,33 @@ class Argv(object):
         i = 1
         while i < len(kw):
             if kw[i].startswith('-') or kw[i].startswith('/'):
-                dic[kw[i]] = kw[i + 1]
+                if kw[i] == '-p':
+
+                    cur = i+1
+                    if re.match('\w+\:\w+', kw[cur]):
+                        pdic={}
+                        cur=i+1
+                        while cur < len(kw) and not kw[cur].startswith('-'):
+                            kvp=kw[cur].split(':')
+                            pdic[kvp[0]]=kvp[1]
+                            cur+=1
+                        dic[kw[i]]=pdic.__str__()
+                        i=cur
+                    else:
+                        #{type:1,age:2}
+                        find_keys=re.findall('[{,]\s*(\w+)\:', kw[i+1])
+                        for k in find_keys:
+                            kw[i+1]=kw[i+1].replace(k, "%r"%k)
+                        dic[kw[i]]=kw[i+1]
+                        i+=2
+                else:
+                    dic[kw[i]] = kw[i + 1]
+                    i+=2
             else:
                 if man is None:
                     print('format error')
                 else:
                     print(man)
-            i += 2
         return dic
 
 
@@ -44,6 +64,6 @@ if __name__ == '__main__':
     dic=Argv.parse_argv(sys.argv)
     print(dic)
 
-    s='argv.py -p abcp -s ssss -f yes'
+    s="argv.py -p type:1 classId:2"
     dic2=Argv.parse(s)
     print(dic2)

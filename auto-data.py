@@ -19,6 +19,7 @@ if __name__ == '__main__':
         python auto-data.py getXXX.do -r 5
         
     '''
+    print('>>>>>> %r' % sys.argv)
     argv = Argv.parse_argv(sys.argv[1:])
     name = argv['name']
     cfg = Config(params_path)
