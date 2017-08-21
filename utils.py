@@ -5,7 +5,7 @@ import requests
 
 
 def random_select(v):
-    if isinstance(v, str) and re.match(r'{\d+(,[0-9]+)+}', v):
+    if isinstance(v, str) and re.match(r'\{[\u4e00-\u9fa5\w]+(,[\u4e00-\u9fa5\w]+)*\}', v):
         lst = v[1:-1].split(',')
         index = random.randint(0, len(lst) - 1)
         return lst[index]

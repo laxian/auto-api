@@ -36,7 +36,7 @@ class Param:
             if '%' in v:
                 v = v % (self.counter)
 
-            if re.match(r'{\d+(,[0-9]+)+}', v):
+            if re.match(r'\{[\u4e00-\u9fa5\w]+(,[\u4e00-\u9fa5\w]+)*\}', v):
                 v = utils.random_select(v)
 
             # 1. 处理$变量

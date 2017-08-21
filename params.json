@@ -117,7 +117,7 @@
     "apiName": "getInformalStudentList.do",
     "params": {
       "userId": 1,
-      "name": null,
+      "name": "{小}",
       "phone": null,
       "schoolName": null,
       "schoolId": null,
