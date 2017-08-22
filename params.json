@@ -105,11 +105,12 @@
     "method": "post",
     "path": "em",
     "apiName": "addEnrollInfo.do",
-    "studentList":"@getStudentList.do -j data/studentList#/userId",
-    "studentInfo":"@getStudentInfo.do -p {'studentId':$studentList}",
+    "studentList":"@getInformalStudentList.do -j data/students#/id",
+    "classId":"@getClassCourselistList.do -j data/subjectList#/subSchoolList#/classList#/classId",
+    "newAccount":"@getNewAccount.do -p {'type':3,'classId':$classId}",
     "params": {
       "userId": 1,
-      "studentLoginId": "@if $params/type==1: @getNewAccount.do -p {'type':3,'classId':859} -j data/loginId else: ",
+      "studentLoginId": "@if $params/type==1: $newAccount/data/loginId else: ",
       "studentId": "$studentList",
       "studentName": "周卫贤%d",
       "studentBirth": "2010-06-%d",
@@ -121,7 +122,7 @@
       "payAmount": "56",
       "prepay": "666",
       "schoolId": "@getSchoolAndSubList.do -p {'type':0} -j data#/schoolId",
-      "classIds": "$studentInfo/data/classId:$studentInfo/data/studentNo",
+      "classIds": "$classId:$newAccount/data/studentNo",
       "ignorePhoneNum": 1,
       "isTest": "{0,1}",
       "testScore": 90,
@@ -162,6 +163,17 @@
       "pageNum": 1,
       "pageSize": 20,
       "state": null,
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  },
+  {
+    "method": "get",
+    "path": "stum",
+    "apiName": "getInformalStudentInfo.do",
+    "params": {
+      "userId": 1,
+      "studentId": null,
       "time": "!{{int(time.time()*1000)}}",
       "sign": "!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
     }
