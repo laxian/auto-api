@@ -121,7 +121,7 @@
       "parentName": "他爸%d",
       "phoneNum": "13322229999",
       "payAmount": "56",
-      "prepay": "666",
+      "prepay": "666.00",
       "schoolId": "$schoolId",
       "classIds": "$classId:$newAccount/data/studentNo",
       "ignorePhoneNum": 1,

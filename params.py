@@ -24,6 +24,15 @@ class Param:
 
         #如果有预先加载接口，首先加载
         for k,v in api.items():
+
+            if isinstance(v, str):
+                if '$' in v:
+                    reg = '(\$(?:[\w/]+))'
+                    var_list = re.findall(reg, v)
+                    for va in var_list:
+                        rand = utils.random_select(utils.find_by_path(self.api, va[1:]))
+                        v = v.replace(va, str(rand))
+
             if isinstance(v, str) and v.startswith('@'):
                 api[k]=self.request_cmd(v[1:])
 
@@ -108,7 +117,7 @@ class Param:
             v = param['-p']
             if re.match("\{('\w+':\s*'?[\w@]+'?)(?:\s*,\s*'\w+':\s*'?[\w@]+'?)*}", v):
                 param_dic = eval(v)
-            elif re.match("\{('\w+':\s*'?\$\w+'?)(?:\s*,\s*'\w+':\s*'?\$\w+'?)*}", v):
+            elif re.match("\{('\w+'\s*:\s*'?\$?\w+'?)(?:\s*,\s*'\w+':\s*'?\$?\w+)*'?\}", v):
                 '''
                 预先加载的接口中，有$变量引用的，先替换变量，被应用的变量，需是常量，或者在引用之前被计算
                 '''
@@ -117,8 +126,8 @@ class Param:
                 #getStudentInfo.do -p {'studentId':$studentId}
                 for va in var_list:
                     rand = utils.random_select(utils.find_by_path(api, va[1:]))
-                    param_dic = eval(v.replace(va, str(rand)))
-
+                    v.replace(va, str(rand))
+                param_dic['-p']=v
 
         # ready to request
         cfg = Config()
