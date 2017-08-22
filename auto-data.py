@@ -13,7 +13,7 @@ if __name__ == '__main__':
     a tools auto test http api
     
     usage:
-        auto-data.py <api_name> [-r repeat] [-j json path] [-p params]
+        auto-data.py <api_name> [-j json path] [-p params] [-r repeat]
     
     example:
         python auto-data.py getXXX.do -r 5

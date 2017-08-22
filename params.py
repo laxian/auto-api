@@ -22,6 +22,7 @@ class Param:
         elif isinstance(api, dict):
             self.api = api
 
+        #如果有预先加载接口，首先加载
         for k,v in api.items():
             if isinstance(v, str) and v.startswith('@'):
                 api[k]=self.request_cmd(v[1:])
@@ -105,9 +106,12 @@ class Param:
         param_dic = {}
         if '-p' in param.keys():
             v = param['-p']
-            if re.match("\{('\w+':\s*'?\w+'?)(?:\s*,\s*'\w+':\s*'?\w+'?)*}", v):
+            if re.match("\{('\w+':\s*'?[\w@]+'?)(?:\s*,\s*'\w+':\s*'?[\w@]+'?)*}", v):
                 param_dic = eval(v)
             elif re.match("\{('\w+':\s*'?\$\w+'?)(?:\s*,\s*'\w+':\s*'?\$\w+'?)*}", v):
+                '''
+                预先加载的接口中，有$变量引用的，先替换变量，被应用的变量，需是常量，或者在引用之前被计算
+                '''
                 reg = '(\$(?:\*|[\w/]+))'
                 var_list = re.findall(reg, v)
                 #getStudentInfo.do -p {'studentId':$studentId}
@@ -118,12 +122,12 @@ class Param:
 
         # ready to request
         cfg = Config()
-        api_param = cfg.find_api(param['name'])
-        # print(api_param['params'])
-        api_param['params'].update(param_dic)
-        newp = Param(api_param)
-        return newp.pick(param['-j'] if '-j' in param.keys() else None)
+        api_dic = cfg.find_api(param['name'])
+        api_dic['params'].update(param_dic)
+        newp = Param(api_dic)
+        return newp.request_and_find(param['-j'] if '-j' in param.keys() else None)
 
+    # 拼接get请求url的参数部分
     def append_params(self):
         dic = self.params()
         ret = '?'
@@ -134,25 +138,24 @@ class Param:
             ret += '&'
         return ret
 
+    # 拼接post请求url
+    def post_url(self, url=base_url):
+        return url + self.path() + self.api['apiName']
+
+    # get请求url
+    def get_url(self, url=base_url):
+        ret = self.post_url() + self.append_params()
+        print(ret)
+        return ret
+
     def api(self):
         return self.api['apiName']
 
     def method(self):
         return self.api['method']
 
-    def dependency(self):
-        return self.api['dependency'] if 'dependency' in self.api else None
-
     def path(self):
         return '' if 'path' not in self.api else self.api['path'] + os.sep
-
-    def post_url(self, url=base_url):
-        return url + self.path() + self.api['apiName']
-
-    def get_url(self, url=base_url):
-        ret = self.post_url() + self.append_params()
-        print(ret)
-        return ret
 
     def request(self):
         if self.method() == 'post':
@@ -160,26 +163,13 @@ class Param:
         elif self.method() == 'get':
             return requests.get(self.get_url())
 
-    def pick(self, jpath):
+    def request_and_find(self, jpath):
         resp = self.request()
         jsn = resp.text
-        if jpath is not None:
-            jdic = json.loads(jsn)
-            paths = jpath.split('/')
-            i = 0
-            curr = jdic
-            while i < len(paths):
-                p = paths[i]
-                if p.endswith('#'):
-                    lst = curr[p[:-1]]
-                    random_index = random.randint(0, len(lst) - 1)
-                    curr = lst[random_index]
-                else:
-                    try:
-                        curr = curr[p]
-                    except:
-                        print('%r not in %r' % (p, curr))
-                        return ''
-                i += 1
-            return curr
-        return jsn
+        return self.find_in_json(jpath, jsn)
+
+    def find_in_json(self, jpath, jsn):
+        jdic = json.loads(jsn)
+        find_v=utils.find_by_path(jdic, jpath)
+        return find_v if find_v else jsn
+

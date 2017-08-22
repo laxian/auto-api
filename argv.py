@@ -41,6 +41,7 @@ class Argv(object):
                             pdic[kvp[0]]=kvp[1]
                             cur+=1
                         dic[kw[i]]=pdic.__str__()
+                        print(kw[i])
                         i=cur
                     else:
                         #{type:1,age:2}
@@ -65,6 +66,6 @@ if __name__ == '__main__':
     dic=Argv.parse_argv(sys.argv)
     print(dic)
 
-    s="argv.py -p type:1 classId:2"
+    s="argv.py addEnrollInfo.do -p studentLoginId:s1@66666888"
     dic2=Argv.parse(s)
     print(dic2)
