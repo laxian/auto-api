@@ -1,3 +1,4 @@
+import json
 import random
 import re
 import time
@@ -33,7 +34,17 @@ def find_by_path(jdic, jpath):
                 random_index = random.randint(0, len(lst) - 1)
                 curr = lst[random_index]
             else:
-                curr = curr[p]
+                if isinstance(curr, dict):
+                    if p in curr.keys():
+                        curr = curr[p]
+                    else:
+                        return None
+                else:
+                    try:
+                        curr=json.loads(curr)
+                        curr=curr[p]
+                    except:
+                        return None
             i += 1
         return curr
     return None

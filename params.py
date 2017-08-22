@@ -15,18 +15,22 @@ from constant import base_url
 
 
 class Param:
-    def __init__(self, param):
+    def __init__(self, api):
         self.counter = 0
-        if isinstance(param, str):
-            self.param = json.loads(param, encoding='utf-8', object_pairs_hook=OrderedDict)
-        elif isinstance(param, dict):
-            self.param = param
+        if isinstance(api, str):
+            self.api = json.loads(api, encoding='utf-8', object_pairs_hook=OrderedDict)
+        elif isinstance(api, dict):
+            self.api = api
+
+        for k,v in api.items():
+            if isinstance(v, str) and v.startswith('@'):
+                api[k]=self.request_cmd(v[1:])
 
     def params(self):
         '''
         "@if $type==1: '@getNewAccount.do {'type':3,'classId':$classId}' else None"
         '''
-        ps = self.param['params']
+        ps = self.api['params']
         for k in ps.keys():
             v = ps[k]
 
@@ -47,11 +51,11 @@ class Param:
 
                     if va == '$*':
                         del ps[k]
-                        print(ps)
+                        # print(ps)
                         v = v.replace(va, json.dumps({k: v for k, v in ps.items() if v is not None}))
                         ps[k] = v
                     else:
-                        rand = utils.random_select(utils.find_by_path(self.param, va[1:]))
+                        rand = utils.random_select(utils.find_by_path(self.api, va[1:]))
                         if va[1:] in ps.keys():
                             ps[va[1:]] = rand
                         v = v.replace(va, str(rand))
@@ -83,10 +87,10 @@ class Param:
                     else:
                         v = self.request_cmd(cmd)
 
-            if isinstance(v,str) and '@' in v:
-                at_list=re.findall(r'@<<.+?>>',v)
+            if isinstance(v, str) and '@' in v:
+                at_list = re.findall(r'@<<.+?>>', v)
                 for al in at_list:
-                    v=v.replace(al, self.request_cmd(al[3:-2]))
+                    v = v.replace(al, self.request_cmd(al[3:-2]))
 
             ps[k] = v
 
@@ -94,18 +98,28 @@ class Param:
 
     def request_cmd(self, cmd):
         param = Argv.parse(cmd)
-        return self.request_argv(param)
+        return self.request_argv(param, self.api)
 
     @staticmethod
-    def request_argv(param):
+    def request_argv(param, api=None):
         param_dic = {}
         if '-p' in param.keys():
-            if re.match("\{('\w+':\s*'?\w+'?)(?:\s*,\s*'\w+':\s*'?\w+'?)*}", param['-p']):
-                param_dic = eval(param['-p'])
+            v = param['-p']
+            if re.match("\{('\w+':\s*'?\w+'?)(?:\s*,\s*'\w+':\s*'?\w+'?)*}", v):
+                param_dic = eval(v)
+            elif re.match("\{('\w+':\s*'?\$\w+'?)(?:\s*,\s*'\w+':\s*'?\$\w+'?)*}", v):
+                reg = '(\$(?:\*|[\w/]+))'
+                var_list = re.findall(reg, v)
+                #getStudentInfo.do -p {'studentId':$studentId}
+                for va in var_list:
+                    rand = utils.random_select(utils.find_by_path(api, va[1:]))
+                    param_dic = eval(v.replace(va, str(rand)))
+
 
         # ready to request
         cfg = Config()
         api_param = cfg.find_api(param['name'])
+        # print(api_param['params'])
         api_param['params'].update(param_dic)
         newp = Param(api_param)
         return newp.pick(param['-j'] if '-j' in param.keys() else None)
@@ -121,19 +135,19 @@ class Param:
         return ret
 
     def api(self):
-        return self.param['apiName']
+        return self.api['apiName']
 
     def method(self):
-        return self.param['method']
+        return self.api['method']
 
     def dependency(self):
-        return self.param['dependency'] if 'dependency' in self.param else None
+        return self.api['dependency'] if 'dependency' in self.api else None
 
     def path(self):
-        return '' if 'path' not in self.param else self.param['path'] + os.sep
+        return '' if 'path' not in self.api else self.api['path'] + os.sep
 
     def post_url(self, url=base_url):
-        return url + self.path() + self.param['apiName']
+        return url + self.path() + self.api['apiName']
 
     def get_url(self, url=base_url):
         ret = self.post_url() + self.append_params()
@@ -164,7 +178,7 @@ class Param:
                     try:
                         curr = curr[p]
                     except:
-                        print('%r not in %r'%(p, curr))
+                        print('%r not in %r' % (p, curr))
                         return ''
                 i += 1
             return curr
