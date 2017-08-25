@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 
 import sys
@@ -41,7 +42,7 @@ class Argv(object):
                             pdic[kvp[0]]=kvp[1]
                             cur+=1
                         dic[kw[i]]=pdic.__str__()
-                        print(kw[i])
+                        #print(kw[i])
                         i=cur
                     else:
                         #{type:1,age:2}

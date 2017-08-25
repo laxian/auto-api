@@ -7,11 +7,12 @@ import re
 from collections import OrderedDict
 
 import requests
+import sys
 
 import utils
 from argv import Argv
 from config import Config
-from constant import base_url
+from constant import base_url, params_path
 
 
 class Param:
@@ -30,11 +31,15 @@ class Param:
                     reg = '(\$(?:[\w/]+))'
                     var_list = re.findall(reg, v)
                     for va in var_list:
-                        rand = utils.random_select(utils.find_by_path(self.api, va[1:]))
-                        v = v.replace(va, str(rand))
+                        rand = utils.find_by_path(self.api, va[1:])
+                        v = v.replace(va, str(rand) if rand else '')
+                        api[k]=v
 
             if isinstance(v, str) and v.startswith('@'):
                 api[k]=self.request_cmd(v[1:])
+
+    def headers(self):
+        return self.api['headers'] if 'headers' in self.api else None
 
     def params(self):
         '''
@@ -43,6 +48,9 @@ class Param:
         ps = self.api['params']
         for k in ps.keys():
             v = ps[k]
+
+            if isinstance(v, dict) or isinstance(v, list):
+                v=json.dumps(v)
 
             if not isinstance(v, str):
                 continue
@@ -67,7 +75,7 @@ class Param:
                     else:
                         rand = utils.random_select(utils.find_by_path(self.api, va[1:]))
                         if va[1:] in ps.keys():
-                            ps[va[1:]] = rand
+                            ps[va[1:]] = rand if rand else ''
                         v = v.replace(va, str(rand))
 
             # 1. 可执行代码块
@@ -168,17 +176,27 @@ class Param:
 
     def request(self):
         if self.method() == 'post':
-            return requests.post(self.post_url(), data=self.params())
+            return requests.post(self.post_url(), data=self.params(), headers=self.headers())
         elif self.method() == 'get':
             return requests.get(self.get_url())
 
     def request_and_find(self, jpath):
         resp = self.request()
+        if resp.status_code >= 400:
+            print('--> HTTP: %d' % resp.status_code)
         jsn = resp.text
         return self.find_in_json(jpath, jsn)
 
     def find_in_json(self, jpath, jsn):
         jdic = json.loads(jsn)
         find_v=utils.find_by_path(jdic, jpath)
-        return find_v if find_v else jsn
+        return find_v if find_v else ''
 
+if __name__=='__main__':
+
+    argv = Argv.parse_argv(sys.argv[1:])
+    name = argv['name']
+    cfg = Config(params_path)
+    api = cfg.find_api(name)
+    p=Param(api)
+    print(p.request())

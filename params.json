@@ -105,10 +105,10 @@
     "method": "post",
     "path": "em",
     "apiName": "addEnrollInfo.do",
-    "schoolId":"@getSchoolAndSubList.do -p {'type':0} -j data#/schoolId",
-    "studentList":"@getInformalStudentList.do -j data/students#/id",
-    "classId":"@getClassCourselistList.do -j data/subjectList#/subSchoolList#/classList#/classId",
-    "newAccount":"@getNewAccount.do -p {'type':3,'classId':$classId,'schoolId':$schoolId}",
+    "schoolId": "@getSchoolAndSubList.do -p {'type':0} -j data#/schoolId",
+    "studentList": "@getInformalStudentList.do -j data/students#/id",
+    "classId": "@getClassCourselistList.do -j data/subjectList#/subSchoolList#/classList#/classId",
+    "newAccount": "@getNewAccount.do -p {'type':3,'classId':$classId,'schoolId':$schoolId}",
     "params": {
       "userId": 1,
       "studentLoginId": "@if $params/type==1: $newAccount/data/loginId else: ",
@@ -175,6 +175,147 @@
     "params": {
       "userId": 1,
       "studentId": null,
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  },
+  {
+    "method": "get",
+    "path": "apm",
+    "apiName": "getApplyPhaseIdNameList.do",
+    "params": {
+      "userId": 1,
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  },
+  {
+    "method": "get",
+    "path": "apm",
+    "apiName": "getPhaseList.do",
+    "params": {
+      "userId": 1,
+      "pageNum": 1,
+      "pageSize": 20,
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  },
+  {
+    "method": "get",
+    "path": "clm",
+    "apiName": "getCourselistList.do",
+    "params": {
+      "userId": 1,
+      "pageNum": 1,
+      "pageSize": 20,
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  },
+  {
+    "method": "get",
+    "path": "crm",
+    "apiName": "getClassroomList.do",
+    "params": {
+      "userId": 1,
+      "pageNum": 1,
+      "pageSize": 20,
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  },
+  {
+    "method": "get",
+    "path": "clm",
+    "apiName": "getCourselistIdNameCourseList.do",
+    "params": {
+      "userId": 1,
+      "phaseId": 1,
+      "schoolId": 1,
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  },
+  {
+    "method": "get",
+    "path": "tm",
+    "apiName": "getTeacherIdNameList.do",
+    "params": {
+      "userId": 1,
+      "schoolId": 1,
+      "subSchoolId": null,
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  },
+  {
+    "method": "get",
+    "path": "crm",
+    "apiName": "getClassroomIdNameList.do",
+    "params": {
+      "userId": 1,
+      "schoolId": 1,
+      "subSchoolId": null,
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  },
+  {
+    "method": "post",
+    "path": "classm",
+    "apiName": "addClassInfo.do",
+    "schoolInfo": "@getSchoolAndSubList.do -j data#",
+    "schoolId": "1",
+    "phaseId": "132",
+    "classroomId": "@getClassroomIdNameList.do -j data/classroomList#/classroomId",
+    "teacherId": "@getTeacherIdNameList.do -j data/teacherList#/teacherId",
+    "courselistId": "504",
+    "courseId": "838",
+    "params": {
+      "userId": 1,
+      "className": "周老师小班!{{random.randint(0,99)}}",
+      "phaseId": "$phaseId",
+      "schoolId": "$schoolId",
+      "subSchoolId": null,
+      "courselistId": "$courselistId",
+      "courseList": [
+        {
+          "courseId": "$courseId",
+          "courseStartTime": "2017-08-26 12:00",
+          "courseEndTime": "2017-08-29 12:00",
+          "teacherId": "$teacherId",
+          "classroomId": "$classroomId",
+          "orderNum": "1"
+        }
+      ],
+      "studentId": null,
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  },
+  {
+    "method": "get",
+    "path": "tm",
+    "apiName": "getTeacherList.do",
+    "params": {
+      "userId": 1,
+      "pageNum": 1,
+      "pageSize": 10,
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  },
+  {
+    "method": "get",
+    "path": "cm",
+    "apiName": "getCourseList.do",
+    "params": {
+      "userId": 1,
+      "courseId": null,
+      "courseName": null,
+      "pageNum": 1,
+      "pageSize": 10,
       "time": "!{{int(time.time()*1000)}}",
       "sign": "!{{requests.post('http://www.yuwenclub.com/dyw-managet/test/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
     }

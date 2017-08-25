@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 import random
 import re
@@ -42,9 +43,34 @@ def find_by_path(jdic, jpath):
         while i < len(paths):
             p = paths[i]
             if p.endswith('#'):
-                lst = curr[p.replace('#', '')]
-                random_index = random.randint(0, len(lst) - 1)
-                curr = lst[random_index]
+                p=p.replace('#', '')
+                if p in curr:
+                    lst = curr[p]
+                    if len(lst) == 0:
+                        return None
+                else:
+                    print('%r not in %r' % (p, curr))
+                    return None
+                if i == len(paths) - 1:
+                    return curr
+                # 非空list、非终点
+                else:
+                    # 直接子key检测过滤
+                    lst = [x for x in lst if paths[i+1].replace('#', '') in x]
+                    if len(lst) == 0:
+                        return None
+                    if paths[i+1].endswith('#'):
+                        curr={}
+                        nlst = []
+                        for l in lst:
+                            nlst.extend(l[paths[i + 1].replace('#', '')])
+                        curr[paths[i+1].replace('#', '')]=nlst
+                        a=10
+                    else:
+                        lst=curr[p]
+                        random_index = random.randint(0, len(lst) - 1)
+                        curr = lst[random_index]
+
             else:
                 if isinstance(curr, dict):
                     if p in curr.keys():
