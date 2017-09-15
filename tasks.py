@@ -5,7 +5,7 @@ import json
 import utils
 from argv import Argv
 from apis import Apis
-from constant import task_path
+from config import task_path
 from api import Api
 from task import Task
 

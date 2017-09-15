@@ -2,7 +2,7 @@
 
 import json
 
-from constant import params_path
+from config import params_path
 
 __author__ = 'zwx'
 

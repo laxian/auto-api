@@ -3,7 +3,7 @@ import sys
 
 from argv import Argv
 from apis import Apis
-from constant import params_path
+from config import params_path
 from api import Api
 
 __author__ = 'zwx'

@@ -5,10 +5,8 @@ import re
 import time
 import requests
 
-'''
-by zwx
-不要尝试自动导报清理无用的导入，因为配置文件中的某些代码块被eval()函数执行时，需要用到这些包
-'''
+__author__ = 'zwx'
+
 
 def random_select(v):
     if isinstance(v, str) and re.match(r'\{[\u4e00-\u9fa5\w]+(,[\u4e00-\u9fa5\w]+)*\}', v):
@@ -27,6 +25,7 @@ def eval_all(cmd):
         cmd = cmd.replace(va, str(eval(va[3:-2])))
     return cmd
 
+
 def find_by_path(jdic, jpath):
     '''
     从字典中查找一个key。如果某一级是个str，但是path路径尚未走完，会尝试用json.loads加载str
@@ -43,7 +42,7 @@ def find_by_path(jdic, jpath):
         while i < len(paths):
             p = paths[i]
             if p.endswith('#'):
-                p=p.replace('#', '')
+                p = p.replace('#', '')
                 if p in curr:
                     lst = curr[p]
                     if len(lst) == 0:
@@ -56,18 +55,18 @@ def find_by_path(jdic, jpath):
                 # 非空list、非终点
                 else:
                     # 直接子key检测过滤
-                    lst = [x for x in lst if paths[i+1].replace('#', '') in x]
+                    lst = [x for x in lst if paths[i + 1].replace('#', '') in x]
                     if len(lst) == 0:
                         return None
-                    if paths[i+1].endswith('#'):
-                        curr={}
+                    if paths[i + 1].endswith('#'):
+                        curr = {}
                         nlst = []
                         for l in lst:
                             nlst.extend(l[paths[i + 1].replace('#', '')])
-                        curr[paths[i+1].replace('#', '')]=nlst
-                        a=10
+                        curr[paths[i + 1].replace('#', '')] = nlst
+                        a = 10
                     else:
-                        lst=curr[p]
+                        lst = curr[p]
                         random_index = random.randint(0, len(lst) - 1)
                         curr = lst[random_index]
 
@@ -80,17 +79,17 @@ def find_by_path(jdic, jpath):
                         return None
                 else:
                     try:
-                        curr=json.loads(curr)
-                        curr=curr[p]
+                        curr = json.loads(curr)
+                        curr = curr[p]
                     except:
                         print('%r not in %r' % (p, curr))
                         return None
             i += 1
         return curr
-    return None
+    return jdic
 
 
 if __name__ == '__main__':
-    a='laxian is !{2+3} years old'
-    for i in range(0,9):
+    a = 'laxian is !{2+3} years old'
+    for i in range(0, 9):
         print(eval_all(a))

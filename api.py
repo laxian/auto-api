@@ -12,7 +12,7 @@ import sys
 import utils
 from argv import Argv
 from apis import Apis
-from constant import base_url, params_path
+from config import base_url, params_path
 
 __author__ = 'zwx'
 
@@ -171,7 +171,7 @@ class Api:
     # 拼接get请求url的参数部分
     def append_params(self):
         dic = self.params()
-        ret = '?'
+        ret = '&'
         for k in dic.keys():
             ret += k
             ret += '='
