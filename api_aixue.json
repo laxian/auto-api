@@ -1,0 +1,45 @@
+[
+  {
+    "method": "get",
+    "apiName": "getConfig.do",
+    "params": {
+      "appId": "561",
+      "deviceCode": "SKGMHAGQ99999999",
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://school.xxxxxx.com/dl910ta/_ImTest/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  },
+  {
+    "method": "get",
+    "apiName": "getProtocolConfig.do",
+    "params": {
+      "jid": "8519299",
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://school.xxxxxx.com/dl910ta/_ImTest/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  },
+  {
+    "method": "post",
+    "baseUrl": "http://i2.m.xxxxxx.com:48081/study-im-service-2.0/user/",
+    "apiName": "login.do",
+    "params": {
+      "uName": "kang002",
+      "pwd": "a11111",
+      "uType": null,
+      "from": null,
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://school.xxxxxx.com/dl910ta/_ImTest/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  },
+  {
+    "method": "get",
+    "apiName": "getWorkInfo.do",
+    "baseUrl": "https://school.xxxxxx.com/dl910ta/im2.1?m=",
+    "params": {
+      "jid": "8519299",
+      "schoolId": "50043",
+      "time": "!{{int(time.time()*1000)}}",
+      "sign": "!{{requests.post('http://school.xxxxxx.com/dl910ta/_ImTest/_manager/GenderCourseRecordSign.jsp', !<<dict($*,**{'method':'$apiName'})>>).text.strip()}}"
+    }
+  }
+]

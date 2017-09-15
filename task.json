@@ -1,0 +1,22 @@
+[
+  {
+    "name": "login.do",
+    "argv": "-p pwd:123456",
+    "assert": "${result} == 1"
+  },
+  {
+    "name": "getConfig.do",
+    "argv": "",
+    "assert": "'成功' in ${json} -j msg"
+  },
+  {
+    "name": "getProtocolConfig.do",
+    "argv": "",
+    "assert": "${json} -j data/isUsedSecurity == 1"
+  },
+  {
+    "name": "getWorkInfo.do",
+    "argv": "-j data/classTypeList#/classType",
+    "assert": "${result}  == 0"
+  }
+]

@@ -4,8 +4,10 @@ import json
 
 from constant import params_path
 
+__author__ = 'zwx'
 
-class Config(object):
+
+class Apis(object):
     '''
     加载接口参数配置文件类
     '''

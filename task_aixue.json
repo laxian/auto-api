@@ -1,0 +1,17 @@
+[
+  {
+    "name": "getTeacherList.do",
+    "argv": "",
+    "assert": "${code} == 200"
+  },
+  {
+    "name": "getAtClassHomeInfo.do",
+    "argv": "",
+    "assert": "${code} == 200"
+  },
+  {
+    "name": "getTeacherInfo.do",
+    "argv": "-v",
+    "assert": "${code} == 200"
+  }
+]
