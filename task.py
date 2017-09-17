@@ -26,6 +26,12 @@ class Task(object):
         return assertExpr
 
     def exec(self):
+
+        '''
+        执行一个接口任务，并断言
+        :return: 断言成功返回True，否则返回False
+        '''
+
         response = Api.request_args(Argv.parse_dict('%s %s' % (self.name(), self.argv())))
         assert_expr = self.asserts()
 
@@ -61,18 +67,30 @@ class Task(object):
                 pass
             else:
                 assert eval(self.asserts())
+            print('\033[32m', end='')
+            print('%-30s ok' % self.name())
+            print('\033[0m', end='')
+            return True
         except:
             print('\033[31m', end='')
             print('%-30s assert faild' % self.name())
             print('\033[0m', end='')
-            return None
-        print('\033[32m', end='')
-        print('%-30s ok' % self.name())
-        print('\033[0m', end='')
+            return False
 
 
 if __name__ == '__main__':
     tasksConfig = Tasks()
     tasks = tasksConfig.task_list()
+    success, fail = 0, 0
     for t in tasks:
-        t.exec()
+        if t.exec():
+            success += 1
+        else:
+            fail += 1
+
+    print('\nsuccess:%10d'%(success))
+
+    # 统计，失败红色高亮
+    print('\033[1;31m', end='')
+    print('fail   :%10d'%(fail))
+    print('\033[0m', end='')
