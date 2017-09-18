@@ -209,12 +209,16 @@ class Api:
         :return: Response对象
         '''
         resp = None
-        if self.method() == 'post':
-            resp = requests.post(self.post_url(), data=self.params(), headers=self.headers())
-        elif self.method() == 'get':
-            resp = requests.get(self.get_url())
-        # 在输入-v命令时，打印返回值，或者请求失败信息
-        self.printv(resp.text) if resp.status_code == 200 else self.printv('%s, %d', resp.reason, resp.status_code)
+        try:
+            if self.method() == 'post':
+                resp = requests.post(self.post_url(), data=self.params(), headers=self.headers())
+            elif self.method() == 'get':
+                resp = requests.get(self.get_url())
+        except BaseException as e:
+            self.printv(e)
+        else:
+            # 在输入-v命令时，打印返回值，或者请求失败信息
+            self.printv(resp.text) if resp.status_code == 200 else self.printv('%s, %d', resp.reason, resp.status_code)
         return resp
 
     def request_and_find(self, jpath):
@@ -227,6 +231,8 @@ class Api:
         return self.find_in_response(resp, jpath)
 
     def find_in_response(self, resp, jpath):
+        if resp is None:
+            return None
         if resp.status_code >= 400:
             return None
         if jpath is None:
