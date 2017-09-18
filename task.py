@@ -32,7 +32,7 @@ class Task(object):
         :return: 断言成功返回True，否则返回False
         '''
 
-        response = Api.request_args(Argv.parse_dict('%s %s' % (self.name(), self.argv())))
+        response = Api.request_argv(Argv.parse_dict('%s %s' % (self.name(), self.argv())))
         assert_expr = self.asserts()
 
         try:
