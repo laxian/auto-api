@@ -272,7 +272,7 @@ class Api:
 if __name__ == '__main__':
     argv = Argv.parse_argv(sys.argv[1:])
     name = argv['name']
-    cfg = Apis(params_path)
+    cfg = Apis()
     api = cfg.find_api(name)
     p = Api(api)
     print(p.request())

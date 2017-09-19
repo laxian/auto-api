@@ -19,7 +19,7 @@ if __name__ == '__main__':
         python auto-api.py getXXX.do -r 5
         
     '''
-    cfg = Apis(params_path)
+    cfg = Apis()
     if len(sys.argv) > 1:
         argv = Argv.parse_argv(sys.argv[1:])
         name = argv['name']
