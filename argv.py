@@ -73,6 +73,8 @@ class Argv(object):
                 else:
                     dic[kw[i]] = kw[i + 1]
                     i += 2
+            elif kw[i] == '':
+                i += 1
             else:
                 if man is None:
                     print('Illegal Argv: "%s"' % kw[i])

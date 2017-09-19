@@ -1,5 +1,6 @@
 #!/bin/python
 # -*- coding: utf-8 -*-
+import sys
 
 from tasks import *
 
@@ -25,14 +26,14 @@ class Task(object):
         assertExpr = self.dic['assert']
         return assertExpr
 
-    def exec(self):
+    def exec(self, verbose=False):
 
         '''
         执行一个接口任务，并断言
         :return: 断言成功返回True，否则返回False
         '''
 
-        response = Api.request_args(Argv.parse_dict('%s %s' % (self.name(), self.argv())))
+        response = Api.request_argv(Argv.parse_dict('%s%s %s' % (self.name(), ' -v ' if verbose else '', self.argv())))
         assert_expr = self.asserts()
 
         try:
@@ -79,11 +80,14 @@ class Task(object):
 
 
 if __name__ == '__main__':
+    verbose = False
+    if len(sys.argv) > 1 and '-v' in sys.argv:
+        verbose = True
     tasksConfig = Tasks()
     tasks = tasksConfig.task_list()
     success, fail = 0, 0
     for t in tasks:
-        if t.exec():
+        if t.exec(verbose):
             success += 1
         else:
             fail += 1
