@@ -74,7 +74,7 @@ class Task(object):
             return True
         except:
             print('\033[31m', end='')
-            print('%-30s assert faild' % self.name())
+            print('%-30s assert (%s) faild.' % (self.name(), assert_expr))
             print('\033[0m', end='')
             return False
 

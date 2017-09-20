@@ -150,7 +150,7 @@ class Api:
                     v.replace(va, str(rand))
                 param_dic['-p'] = v
             # -p {userId:1, loginId:123@qq, ...} 转化成dict
-            if re.match("\{('\w+':\s*'?[\w@]+'?)(?:\s*,\s*'\w+':\s*'?[\w@]+'?)*}", v):
+            if re.match("\{('\w+':\s*'?[\w@\.]+'?)(?:\s*,\s*'\w+':\s*'?[\w@]+'?)*}", v):
                 param_dic = eval(v)
 
         # ready to request
@@ -186,6 +186,7 @@ class Api:
         pre_url = self.post_url()
         # 可能base_url里已经有了'?'。具体拼接方式，根据需求调整
         ret = self.post_url() + self.append_params('&' if '?' in pre_url else '?')
+        self.printv(ret)
         return ret
 
     def base_url(self):
@@ -266,7 +267,11 @@ class Api:
             if len(args) > 1:
                 print(args[0] % args[1:])
             elif len(args) == 1:
-                print(args[0])
+                try:
+                    # 如果是json格式，且格式良好，可读性输出，保持中文
+                    print(json.dumps(json.loads(args[0]), indent=1, ensure_ascii=False))
+                except BaseException as e:
+                    print(args[0])
 
 
 if __name__ == '__main__':
